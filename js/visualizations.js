@@ -108,41 +108,22 @@ var overlayMaps = {
 };
 
 generate_heatmap("data/centroided_noise.json").then(function(returnval) {
-  var heatmap_layer = returnval;
-  overlayMaps["Noise"] = heatmap_layer;
+  overlayMaps["Noise"] = returnval;
 });
 
 add_markers("data/cykelpumpar.json", greenIcon, "beskrivning").then(function(returnval) {
-  var bike_pump_layer = returnval;
-  overlayMaps["Bike pumps"] = bike_pump_layer;
+  overlayMaps["Bike pumps"] = returnval;
 });
 
 add_markers("data/parkering_new.json", yellowIcon, "plats").then(function(returnval) {
-  var parkering_new = returnval;
-  overlayMaps["Parkeringar"] = parkering_new;
+  overlayMaps["Parkeringar"] = returnval;
 });
 
 add_markers_flat("data/laddata.json", blueIcon).then(function(returnval) {
-  var charge_layer = returnval;
-  overlayMaps["Laddstationer"] = charge_layer;
+  overlayMaps["Laddstationer"] = returnval;
   L.control.layers(null, overlayMaps).addTo(mymap);
 });
 
-// <script type="text/javascript">
-//   $(document).ready(function(){
-//     var data = $.parseJSON($.ajax({
-//       url:  'ajaxload.php',
-//       dataType: "json",
-//       async: false
-//     }).responseText); // This will wait until you get a response from the ajax request.
-//
-//     // Now you can use data.posX, data.posY later in your code and it will work.
-//     var x = data.posX;
-//     var y = data.posY;
-//     alert(x+" "+y);
-//     alert(data.posX+" "+data.posY);
-//   });
-// </script>
 
 // $(document).ready(function() {})
 // var heatmap_layer = generate_heatmap("data/centroided_noise.json");
