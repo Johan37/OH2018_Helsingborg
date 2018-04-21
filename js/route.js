@@ -1,4 +1,4 @@
-var StartLocAutoCompl, DestLocAutoCompl, StartLocCoord, DestLocCoord, StartMarker, DestMarker;
+var StartLocAutoCompl, DestLocAutoCompl, StartLocCoord, DestLocCoord, StartMarker, DestMarker, Route;
 
 var StartIcon = L.icon({
     iconUrl: 'icons/startflag.png',
@@ -39,6 +39,8 @@ function GetStartLocCoordinates() {
 
   StartMarker = L.marker( StartLocCoord, {icon:StartIcon} );
   StartMarker.addTo( mymap );
+
+  AddCarRoute();
 }
 
 function GetDestLocCoordinates() {
@@ -52,6 +54,8 @@ function GetDestLocCoordinates() {
 
   DestMarker = L.marker( DestLocCoord, {icon:DestIcon} );
   DestMarker.addTo( mymap );
+
+  AddCarRoute();
 }
 
 function geolocate() {
@@ -60,4 +64,24 @@ function geolocate() {
         radius: 50000 // 50 km
       });
       StartLocAutoCompl.setBounds(circle.getBounds());
+      DestLocAutoCompl.setBounds(circle.getBounds());
+}
+
+function AddCarRoute() {
+
+   if( StartLocCoord && DestLocCoord )
+   {
+      if( Route ){
+         mymap.removeControl( Route )
+      }
+
+      Route = L.Routing.control({
+         waypoints: [
+            L.latLng( StartLocCoord[ 0 ], StartLocCoord[ 1 ] ),
+            L.latLng( DestLocCoord[ 0 ], DestLocCoord[ 1 ] )
+         ],
+         lineOptions: { addWaypoints: false }
+      });
+      Route.addTo( mymap );
+   }
 }
