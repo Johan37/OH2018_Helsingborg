@@ -38,12 +38,28 @@
           <a class="navbar-brand mb-0 h1" href="#">Data Driven City</a>
         </nav>
     </header> 
-    <form id="formid">
-        Start location: <input type="text" name="startloc" id="startlocinput" onFocus="geolocate()"><br>
-        Destionation: <input type="text" name="destloc" id="destlocinput" onFocus="geolocate()">
-    </form>
-    <div id="mapid"></div>
-  
+
+
+    <div class="row">
+        <div class="col-sm-4 form-section">
+            <div class="form-group row">
+              <label for="startloc" class="col-2 col-form-label"><img class="icon" src="icons/startflag.png"></label>
+              <div class="col-10">
+                <input class="form-control" type="text" name="startloc" value="Where are you?" id="startlocinput" onFocus="geolocate()">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="destloc" class="col-2 col-form-label"><img class="icon" src="icons/destflag.png"></label>
+              <div class="col-10">
+                <input class="form-control" type="text" name="destloc" value="Where do you want to be?" id="destlocinput" onFocus="geolocate()">
+              </div>
+            </div>
+        </div>
+        <div class="col-sm">
+            <div id="mapid"></div>
+        </div>
+    </div>
+
 	<script>
 		var mymap = L.map('mapid').setView([56.044, 12.71], 12);
 
