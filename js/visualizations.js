@@ -1,14 +1,4 @@
 
-
-$.getJSON("data/centroided_noise.json", function(json) {
-
-  var noise_layer = L.heatLayer(
-    json,
-    {radius: 7, gradient: {0.2: 'yellow', 0.6: 'orange', 0.9: 'red'}}).addTo(mymap);
-
-});
-
-
 var greenIcon = new L.Icon({
   iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
@@ -43,11 +33,24 @@ var blueIcon = new L.Icon({
 //   markerColor: 'red'
 // });
 
+
+// var data = $.parseJSON($.ajax({
+//       url:  'ajaxload.php',
+//       dataType: "json",
+//       async: false
+//     }).responseText); // This will wait until you get a response from the ajax request.
+
+generate_heatmap = function(data_path) {
+  return $.getJSON(data_path).then(function(json) {
+      return L.heatLayer(json, {radius: 7, gradient: {0.2: "white", 0.6: "gray", 0.98: "black"}}).addTo(mymap);
+  })
+};
+
 add_markers = function(json_path, icon, description_field) {
 
-  $.getJSON(json_path, function(json) {
+  return $.getJSON(json_path).then(function(json) {
 
-    var markers = [];
+    var marker_info_list = [];
     for (var i = 0; i < json.length; i++) {
       var target = json[i];
 
@@ -55,15 +58,20 @@ add_markers = function(json_path, icon, description_field) {
       var lng = target.geometry.coordinates[0];
       var lat = target.geometry.coordinates[1];
 
-      markers.push([lat, lng, description]);
+      marker_info_list.push([lat, lng, description]);
     }
 
-    for (var j = 0; j < markers.length; j++) {
-      var marker = markers[j];
-      var marker_pos = marker.slice(0,2);
-      var marker_text = marker[2];
-      L.marker(marker_pos, {icon: icon}).bindPopup(marker_text).addTo(mymap);
+    var markers = [];
+
+    for (var j = 0; j < marker_info_list.length; j++) {
+      var marker_info = marker_info_list[j];
+      var marker_pos = marker_info.slice(0,2);
+      var marker_text = marker_info[2];
+      var marker = L.marker(marker_pos, {icon: icon}).bindPopup(marker_text).addTo(mymap);
+      markers.push(marker);
     }
+
+    return(L.layerGroup(markers));
   });
 };
 
@@ -71,28 +79,59 @@ add_markers = function(json_path, icon, description_field) {
 
 add_markers_flat = function(json_path, icon) {
 
-  $.getJSON(json_path, function(json) {
+  return $.getJSON(json_path).then(function(json) {
 
-    var markers = [];
+    var marker_info_list = [];
     for (var i = 0; i < json.length; i++) {
       var target = json[i];
       var lng = target[1];
       var lat = target[0];
-      markers.push([lat, lng]);
+      marker_info_list.push([lat, lng]);
     }
 
-    for (var j = 0; j < markers.length; j++) {
-      var marker = markers[j];
-      var marker_pos = marker.slice(0,2);
-      L.marker(marker_pos, {icon: icon}).addTo(mymap);
+    var markers = [];
+
+    for (var j = 0; j < marker_info_list.length; j++) {
+      var marker_info = marker_info_list[j];
+      var marker_pos = marker_info.slice(0,2);
+      var marker = L.marker(marker_pos, {icon: icon}).addTo(mymap);
+      markers.push(marker);
     }
+
+    return(L.layerGroup(markers));
   });
 };
 
 
+var overlayMaps = {
+  // "Noise": heatmap_layer
+};
+
+generate_heatmap("data/centroided_noise.json").then(function(returnval) {
+  overlayMaps["Noise"] = returnval;
+});
+
+add_markers("data/cykelpumpar.json", greenIcon, "beskrivning").then(function(returnval) {
+  overlayMaps["Bike pumps"] = returnval;
+});
+
+add_markers("data/parkering_new.json", yellowIcon, "plats").then(function(returnval) {
+  overlayMaps["Parkeringar"] = returnval;
+});
+
+add_markers_flat("data/laddata.json", blueIcon).then(function(returnval) {
+  overlayMaps["Laddstationer"] = returnval;
+  L.control.layers(null, overlayMaps).addTo(mymap);
+});
 
 
+// $(document).ready(function() {})
+// var heatmap_layer = generate_heatmap("data/centroided_noise.json");
+// var bike_pump_layer = add_markers("data/cykelpumpar.json", greenIcon, "beskrivning");
+// var car_parking_layer = add_markers("data/parkering_new.json", yellowIcon, "plats");
+// var charge_station_layer = add_markers_flat("data/laddata.json", blueIcon);
 
-add_markers("data/cykelpumpar.json", greenIcon, "beskrivning");
-add_markers("data/parkering_new.json", yellowIcon, "plats");
-add_markers_flat("data/laddata.json", blueIcon);
+// var baseMaps = {
+//   "Streets": streets
+// };
+
