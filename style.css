@@ -1,5 +1,5 @@
 .navbar {
-  background-color: #f0f0f0;
+  background-color: #2ed573;
 
 }
 
@@ -11,6 +11,9 @@
 #mapid {
   height: 480px;
   width: 640px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
   margin-top: 100px;
-  margin-left: 20px;
+  width: 40%;
 }
