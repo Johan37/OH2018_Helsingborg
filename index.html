@@ -43,7 +43,7 @@
         <nav class="navbar navbar-expand-lg">
           <a class="navbar-brand mb-0 h1" href="#">Data Driven City</a>
         </nav>
-    </header> 
+    </header>
 
 
     <div class="row">
@@ -60,13 +60,21 @@
                 <input class="form-control" type="text" name="destloc" value="Where do you want to be?" id="destlocinput" onFocus="geolocate()">
               </div>
             </div>
+            <div class="form-group row">
+              <label for="bicyclerange" class="col-2 col-form-label">Range:</label>
+              <div class="col-10">
+                <input class="form-control" type="range" min="0" max="10" value="5" step="0.5" name="bicyclerange" id="bicyclerange">
+            </div>
+            <div class="form-group row">
+              <label for="useChargeStation" class="col-2 col-form-label">Electric vehicle:</label>
+              <div class="col-10">
+                <input type="checkbox" id="useChargeStation" name="useChargeStation">
+            </div>
         </div>
         <div class="col-sm">
             <div id="mapid"></div>
         </div>
     </div>
-
-    <input id="clickMe" type="button" value="clickme" onclick="calculate_best_route();" />
 
 	<script>
 		var mymap = L.map('mapid').setView([56.044, 12.71], 12);

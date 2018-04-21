@@ -68,11 +68,22 @@ function calculate_dist(point1, point2) {
   return(dist);
 }
 
+function measure(lat1, lon1, lat2, lon2){  // generally used geo measurement function
+    var R = 6378.137; // Radius of earth in KM
+    var dLat = lat2 * Math.PI / 180 - lat1 * Math.PI / 180;
+    var dLon = lon2 * Math.PI / 180 - lon1 * Math.PI / 180;
+    var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLon/2) * Math.sin(dLon/2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    var d = R * c;
+    return d * 1000; // meters
+}
+
 var mid_marker;
 
+function calculate_best_route( MaxBicycleRange ) {
 
-
-function calculate_best_route() {
 
   var find_charge_station = $('#useChargeStation').is(":checked");
   // console.log($('#useChargeStation'));
@@ -102,28 +113,34 @@ function calculate_best_route() {
     var curr_pos = target_list[i];
     var curr_path = {};
     curr_path['mid'] = curr_pos;
-    curr_path['car_dist'] = calculate_dist(start_coords, curr_pos);
-    curr_path['bike_dist'] = calculate_dist(curr_pos, dest_coords);
+    curr_path['car_dist'] = measure(start_coords[0], start_coords[1], curr_pos[0], curr_pos[1]);
+    curr_path['bike_dist'] = measure(curr_pos[0], curr_pos[1], dest_coords[0], dest_coords[1]);
     curr_path['tot_dist'] = curr_path['car_dist'] + curr_path['bike_dist'];
 
-    if (best_path === null) {
+    if (best_path === null && MaxBicycleRange >= curr_path['bike_dist'] ) {
       best_path = curr_path;
     }
-    else {
-      if (curr_path['car_dist'] < best_path['car_dist']) {
+    else if(best_path != null && curr_path['car_dist'] < best_path['car_dist'] && MaxBicycleRange >= curr_path['bike_dist'] ) {
         best_path = curr_path;
-      }
     }
+   }
+
+  if( best_path != null )
+  {
+     var best_mid_coord = [best_path['mid'][0], best_path['mid'][1]];
+     console.log(best_mid_coord);
+
+     if( mid_marker ) {
+       mymap.removeLayer( mid_marker );
+     }
+
+     mid_marker = L.marker( best_mid_coord, {icon:StartIcon} );
+     mid_marker.addTo( mymap );
+
+     return(best_mid_coord);
   }
-  var best_mid_coord = [best_path['mid'][0], best_path['mid'][1]];
-  console.log(best_mid_coord);
-
-  if( mid_marker ) {
-    mymap.removeLayer( mid_marker );
+  else
+  {
+     return( null );
   }
-
-  mid_marker = L.marker( best_mid_coord, {icon:StartIcon} );
-  mid_marker.addTo( mymap );
-
-  return(best_mid_coord);
 }

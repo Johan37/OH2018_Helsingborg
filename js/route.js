@@ -1,4 +1,4 @@
-var StartLocAutoCompl, DestLocAutoCompl, StartLocCoord, DestLocCoord, StartMarker, DestMarker, Route;
+var StartLocAutoCompl, DestLocAutoCompl, StartLocCoord, DestLocCoord, StartMarker, DestMarker, CarRoute, CarBicycleRoute, SwitchToBicycleCoord, CarRouteDistance, BicycleCarRouteDistance;
 
 var StartIcon = L.icon({
     iconUrl: 'icons/startflag.png',
@@ -71,17 +71,83 @@ function AddCarRoute() {
 
    if( StartLocCoord && DestLocCoord )
    {
-      if( Route ){
-         mymap.removeControl( Route )
+      if( CarRoute ){
+         mymap.removeControl( CarRoute )
       }
 
-      Route = L.Routing.control({
+      CarRoute = L.Routing.control({
          waypoints: [
             L.latLng( StartLocCoord[ 0 ], StartLocCoord[ 1 ] ),
             L.latLng( DestLocCoord[ 0 ], DestLocCoord[ 1 ] )
          ],
+         routeLine: function(route) {
+            var line = L.Routing.line(route, {
+                addWaypoints: false,
+                extendToWaypoints: true,
+                routeWhileDragging: false,
+                autoRoute: true,
+                useZoomParameter: true,
+                draggableWaypoints: false,
+                addWaypoints: false
+            });
+
+            CarRouteDistance = route.summary.totalDistance;
+
+            return line;
+         },
          lineOptions: { addWaypoints: false }
       });
-      Route.addTo( mymap );
+      CarRoute.addTo( mymap );
+   }
+
+   AddCarBicycleRoute( $('#bicyclerange').val() * 1000 );
+}
+
+function AddCarBicycleRoute( MaxBicycleRange ) {
+
+   if( StartLocCoord && DestLocCoord )
+   {
+      if( CarBicycleRoute ){
+         mymap.removeControl( CarBicycleRoute );
+      }
+
+      ChangeCoord = calculate_best_route( MaxBicycleRange );
+
+      if( ChangeCoord != null )
+      {
+         CarBicycleRoute = L.Routing.control({
+            waypoints: [
+               L.latLng( StartLocCoord[ 0 ], StartLocCoord[ 1 ] ),
+               L.latLng( ChangeCoord[ 0 ], ChangeCoord[ 1 ] ),
+               L.latLng( DestLocCoord[ 0 ], DestLocCoord[ 1 ] )
+            ],
+            routeLine: function(route) {
+               var line = L.Routing.line(route, {
+                   addWaypoints: false,
+                   extendToWaypoints: true,
+                   routeWhileDragging: false,
+                   autoRoute: true,
+                   useZoomParameter: true,
+                   draggableWaypoints: false,
+                   addWaypoints: false,
+                   styles: [{color: 'black', opacity: 0.15, weight: 9}, {color: 'white', opacity: 0.8, weight: 6}, {color: 'green', opacity: 1, weight: 2}]
+               });
+
+               BicycleCarRouteDistance = route.summary.totalDistance;
+
+               return line;
+            },
+            lineOptions: { addWaypoints: false }
+         });
+         CarBicycleRoute.addTo( mymap );
+      }
    }
 }
+
+$(document).on('input change', '#bicyclerange', function() {
+      console.log( $(this).val() );
+      if( StartLocCoord && DestLocCoord )
+      {
+         AddCarBicycleRoute( $(this).val()*1000 );
+      }
+   } );
