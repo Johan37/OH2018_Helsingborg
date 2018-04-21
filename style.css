@@ -1,4 +1,16 @@
+.navbar {
+  background-color: #f0f0f0;
+
+}
+
+.navbar-brand {
+    font-size: 2rem;
+    font-family: 'Lato', sans-serif;
+}
+
 #mapid {
   height: 480px;
   width: 640px;
+  margin-top: 100px;
+  margin-left: 20px;
 }
