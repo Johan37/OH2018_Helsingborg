@@ -70,7 +70,13 @@ function calculate_dist(point1, point2) {
 
 var mid_marker;
 
+
+
 function calculate_best_route() {
+
+  var find_charge_station = $('#useChargeStation').is(":checked");
+  // console.log($('#useChargeStation'));
+  console.log(find_charge_station);
 
   console.log("Calculating route");
   console.log(charge_positions.length);
@@ -84,8 +90,16 @@ function calculate_best_route() {
   var dest_coords = retrieve_destination_coords();
   var best_path = null;
 
-  for (var i = 0; i < parking_positions.length; i++) {
-    var curr_pos = parking_positions[i];
+  var target_list;
+  if (find_charge_station) {
+    target_list = charge_positions;
+  }
+  else {
+    target_list = parking_positions;
+  }
+
+  for (var i = 0; i < target_list.length; i++) {
+    var curr_pos = target_list[i];
     var curr_path = {};
     curr_path['mid'] = curr_pos;
     curr_path['car_dist'] = calculate_dist(start_coords, curr_pos);
