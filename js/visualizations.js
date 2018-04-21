@@ -26,19 +26,6 @@ var blueIcon = new L.Icon({
   shadowSize: [41, 41]
 });
 
-// L.marker([51.5, -0.09], {icon: greenIcon}).addTo(map);
-
-// var redMarker = L.AwesomeMarkers.icon({
-//   icon: 'coffee',
-//   markerColor: 'red'
-// });
-
-
-// var data = $.parseJSON($.ajax({
-//       url:  'ajaxload.php',
-//       dataType: "json",
-//       async: false
-//     }).responseText); // This will wait until you get a response from the ajax request.
 
 generate_heatmap = function(data_path) {
   return $.getJSON(data_path).then(function(json) {
@@ -46,7 +33,12 @@ generate_heatmap = function(data_path) {
   })
 };
 
-add_markers = function(json_path, icon, description_field) {
+var parking_positions = [];
+var charge_positions = [];
+var bike_pump_positions = [];
+
+
+add_parking_markers = function(json_path, icon, description_field) {
 
   return $.getJSON(json_path).then(function(json) {
 
@@ -60,6 +52,39 @@ add_markers = function(json_path, icon, description_field) {
 
       marker_info_list.push([lat, lng, description]);
     }
+
+    parking_positions = marker_info_list;
+
+    var markers = [];
+
+    for (var j = 0; j < marker_info_list.length; j++) {
+      var marker_info = marker_info_list[j];
+      var marker_pos = marker_info.slice(0,2);
+      var marker_text = marker_info[2];
+      var marker = L.marker(marker_pos, {icon: icon}).bindPopup(marker_text).addTo(mymap);
+      markers.push(marker);
+    }
+
+    return(L.layerGroup(markers));
+  });
+};
+
+add_bike_pump_markers = function(json_path, icon, description_field) {
+
+  return $.getJSON(json_path).then(function(json) {
+
+    var marker_info_list = [];
+    for (var i = 0; i < json.length; i++) {
+      var target = json[i];
+
+      var description = target.fields[description_field];
+      var lng = target.geometry.coordinates[0];
+      var lat = target.geometry.coordinates[1];
+
+      marker_info_list.push([lat, lng, description]);
+    }
+
+    bike_pump_positions = marker_info_list;
 
     var markers = [];
 
@@ -89,6 +114,8 @@ add_markers_flat = function(json_path, icon) {
       marker_info_list.push([lat, lng]);
     }
 
+    charge_positions = marker_info_list;
+
     var markers = [];
 
     for (var j = 0; j < marker_info_list.length; j++) {
@@ -111,11 +138,11 @@ generate_heatmap("data/centroided_noise.json").then(function(returnval) {
   overlayMaps["Noise"] = returnval;
 });
 
-add_markers("data/cykelpumpar.json", greenIcon, "beskrivning").then(function(returnval) {
+add_bike_pump_markers("data/cykelpumpar.json", greenIcon, "beskrivning").then(function(returnval) {
   overlayMaps["Bike pumps"] = returnval;
 });
 
-add_markers("data/parkering_new.json", yellowIcon, "plats").then(function(returnval) {
+add_parking_markers("data/parkering_new.json", yellowIcon, "plats").then(function(returnval) {
   overlayMaps["Parkeringar"] = returnval;
 });
 

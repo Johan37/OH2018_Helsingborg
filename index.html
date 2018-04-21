@@ -22,9 +22,10 @@
     <script src="thirdparty/js/jquery-3.3.1.min.js"></script>
     <script src="thirdparty/js/leaflet.ajax.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="route.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=GOOGLE_API_KEY&libraries=places&callback=initAutocomplete" async defer></script>
+    <script src="js/route.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCME2SUMGTUXSu7ZP-hTtjPcfIwGX-SMu8&libraries=places&callback=initAutocomplete" async defer></script>
 
+    <script src="js/extract_data.js"></script>
     <!--<script src="thirdparty/js/leaflet.awesome-markers.min.js"></script>-->
       <!--<script src="thirdparty/bootstrap/js/bootstrap.js"></script>-->
 
@@ -59,6 +60,8 @@
             <div id="mapid"></div>
         </div>
     </div>
+
+    <input id="clickMe" type="button" value="clickme" onclick="calculate_best_route();" />
 
 	<script>
 		var mymap = L.map('mapid').setView([56.044, 12.71], 12);
