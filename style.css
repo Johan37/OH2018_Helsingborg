@@ -43,6 +43,13 @@ html {
 
 .form-section {
     padding-top: 15px;
-    padding-left: 15px;
-    font-size: 14px;
+}
+
+.icon {
+    width: 20px;
+    height: 20px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
 }
