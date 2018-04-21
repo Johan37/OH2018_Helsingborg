@@ -38,12 +38,20 @@
           <a class="navbar-brand mb-0 h1" href="#">Data Driven City</a>
         </nav>
     </header> 
-    <form id="formid">
-        Start location: <input type="text" name="startloc" id="startlocinput" onFocus="geolocate()"><br>
-        Destionation: <input type="text" name="destloc" id="destlocinput" onFocus="geolocate()">
-    </form>
-    <div id="mapid"></div>
-  
+
+
+    <div class="row">
+        <div class="col-sm-4">
+            <form class="form-section">
+                Start location: <input type="text" name="startloc" id="startlocinput" onFocus="geolocate()"><br>
+                Destionation: <input type="text" name="destloc" id="destlocinput" onFocus="geolocate()">
+            </form>
+        </div>
+        <div class="col-sm">
+            <div id="mapid"></div>
+        </div>
+    </div>
+
 	<script>
 		var mymap = L.map('mapid').setView([56.044, 12.71], 12);
 
