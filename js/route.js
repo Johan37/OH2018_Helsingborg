@@ -1,5 +1,17 @@
 var StartLocAutoCompl, DestLocAutoCompl, StartLocCoord, DestLocCoord, StartMarker, DestMarker;
 
+var StartIcon = L.icon({
+    iconUrl: 'icons/startflag.png',
+    iconSize: [32,32],
+    iconAnchor: [0, 32]
+});
+
+var DestIcon = L.icon({
+    iconUrl: 'icons/destflag.png',
+    iconSize: [32, 32],
+    iconAnchor: [0, 32]
+});
+
 function initAutocomplete() {
   // Create the autocomplete object, restricting the search to geographical
   // location types.
@@ -25,7 +37,7 @@ function GetStartLocCoordinates() {
       mymap.removeLayer( StartMarker );
   }
 
-  StartMarker = L.marker( StartLocCoord );
+  StartMarker = L.marker( StartLocCoord, {icon:StartIcon} );
   StartMarker.addTo( mymap );
 }
 
@@ -38,7 +50,7 @@ function GetDestLocCoordinates() {
       mymap.removeLayer( DestMarker );
   }
 
-  DestMarker = L.marker( DestLocCoord );
+  DestMarker = L.marker( DestLocCoord, {icon:DestIcon} );
   DestMarker.addTo( mymap );
 }
 
