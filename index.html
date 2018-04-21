@@ -15,7 +15,8 @@
       integrity="sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw=="
       crossorigin=""></script>
     <script src="leaflet-heat.js"></script>
-    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="thirdparty/js/jquery-3.3.1.min.js"></script>
+    <script src="thirdparty/js/leaflet.ajax.min.js"></script>
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Lato:100,300,300i,400" rel="stylesheet">
@@ -39,6 +40,11 @@
 				'Imagery © <a href="http://mapbox.com">Mapbox</a>',
 			id: 'mapbox.streets'
 		}).addTo(mymap);
+
+    //var geojsonLayer = new L.GeoJSON.AJAX("http://localhost:8000/smileygodkanda-platser-i-helsingborg.geojson");       
+    //var geojsonLayer = new L.GeoJSON.AJAX("https://helsingborg.opendatasoft.com/api/records/1.0/search/?dataset=smileygodkanda-platser-i-helsingborg"); 
+    var geojsonLayer = new L.GeoJSON.AJAX("resurser/data/smileygodkanda-platser-i-helsingborg.geojson");
+    geojsonLayer.addTo(mymap);
 
       var xmlhttp = new XMLHttpRequest();
       var url = "http://data.goteborg.se/AirQualityService/v1.0/LatestMeasurement/9309174e-34a2-4ccf-98f5-d0e33772dc7b?format=json";
