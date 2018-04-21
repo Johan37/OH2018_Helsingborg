@@ -17,6 +17,9 @@
     <script src="leaflet-heat.js"></script>
     <script src="thirdparty/js/jquery-3.3.1.min.js"></script>
     <script src="thirdparty/js/leaflet.ajax.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="route.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=GOOGLE_API_KEY&libraries=places&callback=initAutocomplete" async defer></script>
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Lato:100,300,300i,400" rel="stylesheet">
@@ -27,10 +30,13 @@
           <a class="navbar-brand mb-0 h1" href="#">Data Driven City</a>
         </nav>
     </header> 
+    <form id="formid">
+        Start location: <input type="text" name="startloc" id="startlocinput" onFocus="geolocate()"><br>
+        Destionation: <input type="text" name="destloc" id="destlocinput" onFocus="geolocate()">
+    </form>
     <div id="mapid"></div>
     <p id="json"></p>
 	<script>
-
 		var mymap = L.map('mapid').setView([56.044, 12.71], 12);
 
 		L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
