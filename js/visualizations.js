@@ -27,6 +27,15 @@ var yellowIcon = new L.Icon({
   shadowSize: [41, 41]
 });
 
+var blueIcon = new L.Icon({
+  iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
+
 // L.marker([51.5, -0.09], {icon: greenIcon}).addTo(map);
 
 // var redMarker = L.AwesomeMarkers.icon({
@@ -37,15 +46,15 @@ var yellowIcon = new L.Icon({
 add_markers = function(json_path, icon, description_field) {
 
   $.getJSON(json_path, function(json) {
-    console.log(json);
-    // L.marker([56.044, 12.71]).addTo(mymap);
-    var markers = [];
 
+    var markers = [];
     for (var i = 0; i < json.length; i++) {
       var target = json[i];
+
+      var description = target.fields[description_field];
       var lng = target.geometry.coordinates[0];
       var lat = target.geometry.coordinates[1];
-      var description = target.fields[description_field];
+
       markers.push([lat, lng, description]);
     }
 
@@ -55,10 +64,35 @@ add_markers = function(json_path, icon, description_field) {
       var marker_text = marker[2];
       L.marker(marker_pos, {icon: icon}).bindPopup(marker_text).addTo(mymap);
     }
-
   });
-
 };
+
+
+
+add_markers_flat = function(json_path, icon) {
+
+  $.getJSON(json_path, function(json) {
+
+    var markers = [];
+    for (var i = 0; i < json.length; i++) {
+      var target = json[i];
+      var lng = target[1];
+      var lat = target[0];
+      markers.push([lat, lng]);
+    }
+
+    for (var j = 0; j < markers.length; j++) {
+      var marker = markers[j];
+      var marker_pos = marker.slice(0,2);
+      L.marker(marker_pos, {icon: icon}).addTo(mymap);
+    }
+  });
+};
+
+
+
+
 
 add_markers("data/cykelpumpar.json", greenIcon, "beskrivning");
 add_markers("data/parkering_new.json", yellowIcon, "plats");
+add_markers_flat("data/laddata.json", blueIcon);
