@@ -145,9 +145,11 @@ function AddCarBicycleRoute( MaxBicycleRange ) {
 }
 
 $(document).on('input change', '#bicyclerange', function() {
-      console.log( $(this).val() );
-      if( StartLocCoord && DestLocCoord )
-      {
-         AddCarBicycleRoute( $(this).val()*1000 );
-      }
-   } );
+   AddCarBicycleRoute( $(this).val()*1000 );
+} );
+
+$(document).ready(function() {
+    $('#useChargeStation').change(function() {
+      AddCarBicycleRoute( $('#bicyclerange').val()*1000);
+    });
+});
