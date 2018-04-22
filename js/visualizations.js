@@ -31,8 +31,7 @@ var blueIcon = new L.Icon({
 generate_heatmap = function(data_path) {
   return $.getJSON(data_path).then(function(json) {
     var noiselayer = L.heatLayer(json, {radius: 7, gradient: {0.2: "white", 0.6: "gray", 0.98: "black"}}).addTo(mymap);
-    console.log(noiselayer);
-    return(L.layerGroup(noiselayer).addTo(mymap));
+    return(noiselayer);
   })
 };
 
@@ -134,16 +133,13 @@ add_markers_flat = function(json_path, icon) {
 
 
 var overlayMaps = {
-  // "Noise": heatmap_layer
 };
 
 generate_heatmap("data/centroided_noise.json").then(function(returnval) {
-  console.log("Centroided");
   overlayMaps["Buller"] = returnval;
 });
 
 add_bike_pump_markers("data/cykelpumpar.json", greenIcon, "beskrivning").then(function(returnval) {
-  console.log("other Overlay");
   overlayMaps["Bike pumps"] = returnval;
 });
 
