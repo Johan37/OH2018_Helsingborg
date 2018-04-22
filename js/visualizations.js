@@ -136,7 +136,7 @@ var overlayMaps = {
 };
 
 generate_heatmap("data/centroided_noise.json").then(function(returnval) {
-  overlayMaps["Buller"] = returnval;
+  overlayMaps["Noise levels"] = returnval;
 });
 
 add_bike_pump_markers("data/cykelpumpar.json", greenIcon, "beskrivning").then(function(returnval) {
@@ -144,11 +144,11 @@ add_bike_pump_markers("data/cykelpumpar.json", greenIcon, "beskrivning").then(fu
 });
 
 add_parking_markers("data/parkering_new.json", yellowIcon, "plats").then(function(returnval) {
-  overlayMaps["Parkeringar"] = returnval;
+  overlayMaps["Parking"] = returnval;
 });
 
 add_markers_flat("data/laddata.json", blueIcon).then(function(returnval) {
-  overlayMaps["Laddstationer"] = returnval;
+  overlayMaps["Loadstations"] = returnval;
   L.control.layers(null, overlayMaps, {position: 'topleft'}).addTo(mymap);
 });
 
