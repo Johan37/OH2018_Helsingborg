@@ -1,4 +1,4 @@
-var StartLocAutoCompl, DestLocAutoCompl, StartLocCoord, DestLocCoord, StartMarker, DestMarker, CarRoute, CarBicycleRoute, SwitchToBicycleCoord, CarRouteDistance, BicycleCarRouteDistance;
+var StartLocAutoCompl, DestLocAutoCompl, StartLocCoord, DestLocCoord, StartMarker, DestMarker, CarRoute, CarBicycleRoute, SwitchToBicycleCoord, CarRouteDistance, BicycleCarRouteDistance, Co2GramPerKm;
 
 var StartIcon = L.icon({
     iconUrl: 'icons/startflag.png',
@@ -41,6 +41,7 @@ function GetStartLocCoordinates() {
   StartMarker.addTo( mymap );
 
   AddCarRoute();
+  AddCarBicycleRoute( $('#bicyclerange').val() * 1000 );
 }
 
 function GetDestLocCoordinates() {
@@ -56,6 +57,7 @@ function GetDestLocCoordinates() {
   DestMarker.addTo( mymap );
 
   AddCarRoute();
+  AddCarBicycleRoute( $('#bicyclerange').val() * 1000 );
 }
 
 function geolocate() {
@@ -92,6 +94,9 @@ function AddCarRoute() {
             });
 
             CarRouteDistance = route.summary.totalDistance;
+            var kilometers = Math.round( CarRouteDistance / 100 ) / 10;
+            $('#carroutedist').val( kilometers );
+            $('#carrouteco2').val( Math.round( kilometers * Co2GramPerKm ) );
 
             return line;
          },
@@ -99,8 +104,6 @@ function AddCarRoute() {
       });
       CarRoute.addTo( mymap );
    }
-
-   AddCarBicycleRoute( $('#bicyclerange').val() * 1000 );
 }
 
 function AddCarBicycleRoute( MaxBicycleRange ) {
@@ -134,6 +137,10 @@ function AddCarBicycleRoute( MaxBicycleRange ) {
                });
 
                BicycleCarRouteDistance = route.summary.totalDistance;
+               var kilometers = Math.round( BicycleCarRouteDistance / 100 ) / 10;
+               var BicycleKm = Math.round( measure( ChangeCoord[ 0 ], ChangeCoord[ 1 ], DestLocCoord[ 0 ], DestLocCoord[ 1 ] ) / 100 ) / 10;
+               $('#bicyclecarroutedist').val( kilometers );
+               $('#bicyclecarrouteco2').val( Math.round( ( kilometers - BicycleKm ) * Co2GramPerKm ) );
 
                return line;
             },
@@ -150,6 +157,25 @@ $(document).on('input change', '#bicyclerange', function() {
 
 $(document).ready(function() {
     $('#useChargeStation').change(function() {
-      AddCarBicycleRoute( $('#bicyclerange').val()*1000);
+      if( $(this).is(":checked") )
+      {
+          Co2GramPerKm = ( 15 / 100 ) * 22; // 15 kWh / 100 km, 22 gram Co2 per kWh i Sverige.
+      }
+      else
+      {
+         Co2GramPerKm = 118;
+      }
+
+      AddCarRoute();
+      AddCarBicycleRoute( $('#bicyclerange').val()*1000 );
     });
+
+    if( $('#useChargeStation').is(":checked") )
+    {
+       Co2GramPerKm = ( 15 / 100 ) * 22; // 15 kWh / 100 km, 22 gram Co2 per kWh i Sverige.
+    }
+    else
+    {
+       Co2GramPerKm = 118;
+    }
 });
