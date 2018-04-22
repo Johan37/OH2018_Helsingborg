@@ -66,7 +66,7 @@ add_parking_markers = function(json_path, icon, description_field) {
       markers.push(marker);
     }
 
-    return(L.layerGroup(markers));
+    return(L.layerGroup(markers).addTo(mymap));
   });
 };
 
@@ -97,7 +97,7 @@ add_bike_pump_markers = function(json_path, icon, description_field) {
       markers.push(marker);
     }
 
-    return(L.layerGroup(markers));
+    return(L.layerGroup(markers).addTo(mymap));
   });
 };
 
@@ -126,7 +126,7 @@ add_markers_flat = function(json_path, icon) {
       markers.push(marker);
     }
 
-    return(L.layerGroup(markers));
+    return(L.layerGroup(markers).addTo(mymap));
   });
 };
 
@@ -149,17 +149,6 @@ add_parking_markers("data/parkering_new.json", yellowIcon, "plats").then(functio
 
 add_markers_flat("data/laddata.json", blueIcon).then(function(returnval) {
   overlayMaps["Laddstationer"] = returnval;
-  L.control.layers(null, overlayMaps).addTo(mymap);
+  L.control.layers(null, overlayMaps, {position: 'topleft'}).addTo(mymap);
 });
-
-
-// $(document).ready(function() {})
-// var heatmap_layer = generate_heatmap("data/centroided_noise.json");
-// var bike_pump_layer = add_markers("data/cykelpumpar.json", greenIcon, "beskrivning");
-// var car_parking_layer = add_markers("data/parkering_new.json", yellowIcon, "plats");
-// var charge_station_layer = add_markers_flat("data/laddata.json", blueIcon);
-
-// var baseMaps = {
-//   "Streets": streets
-// };
 
