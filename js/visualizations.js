@@ -1,29 +1,37 @@
 
+
 var greenIcon = new L.Icon({
-  iconUrl: 'icons/bicycle.svg',
-  iconSize: [15, 15],
-  iconAnchor: [6, 15],
-  popupAnchor: [1, -34]
+  iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
 });
 
 var yellowIcon = new L.Icon({
-  iconUrl: 'icons/parking.svg',
-  iconSize: [15, 15],
+  iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-yellow.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+  iconSize: [25, 41],
   iconAnchor: [12, 41],
-  popupAnchor: [1, -34]
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
 });
 
 var blueIcon = new L.Icon({
-  iconUrl: 'icons/charging.svg',
-  iconSize: [15, 15],
-  iconAnchor: [0, 0],
-  popupAnchor: [1, -34]
+  iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
 });
 
 
 generate_heatmap = function(data_path) {
   return $.getJSON(data_path).then(function(json) {
-      return L.heatLayer(json, {radius: 7, gradient: {0.2: "white", 0.6: "gray", 0.98: "black"}}).addTo(mymap);
+    var noiselayer = L.heatLayer(json, {radius: 7, gradient: {0.2: "white", 0.6: "gray", 0.98: "black"}}).addTo(mymap);
+    return(noiselayer);
   })
 };
 
@@ -59,7 +67,7 @@ add_parking_markers = function(json_path, icon, description_field) {
       markers.push(marker);
     }
 
-    return(L.layerGroup(markers));
+    return(L.layerGroup(markers).addTo(mymap));
   });
 };
 
@@ -90,7 +98,7 @@ add_bike_pump_markers = function(json_path, icon, description_field) {
       markers.push(marker);
     }
 
-    return(L.layerGroup(markers));
+    return(L.layerGroup(markers).addTo(mymap));
   });
 };
 
@@ -119,17 +127,16 @@ add_markers_flat = function(json_path, icon) {
       markers.push(marker);
     }
 
-    return(L.layerGroup(markers));
+    return(L.layerGroup(markers).addTo(mymap));
   });
 };
 
 
 var overlayMaps = {
-  // "Noise": heatmap_layer
 };
 
 generate_heatmap("data/centroided_noise.json").then(function(returnval) {
-  overlayMaps["Noise"] = returnval;
+  overlayMaps["Buller"] = returnval;
 });
 
 add_bike_pump_markers("data/cykelpumpar.json", greenIcon, "beskrivning").then(function(returnval) {
@@ -142,17 +149,6 @@ add_parking_markers("data/parkering_new.json", yellowIcon, "plats").then(functio
 
 add_markers_flat("data/laddata.json", blueIcon).then(function(returnval) {
   overlayMaps["Laddstationer"] = returnval;
-  L.control.layers(null, overlayMaps).addTo(mymap);
+  L.control.layers(null, overlayMaps, {position: 'topleft'}).addTo(mymap);
 });
-
-
-// $(document).ready(function() {})
-// var heatmap_layer = generate_heatmap("data/centroided_noise.json");
-// var bike_pump_layer = add_markers("data/cykelpumpar.json", greenIcon, "beskrivning");
-// var car_parking_layer = add_markers("data/parkering_new.json", yellowIcon, "plats");
-// var charge_station_layer = add_markers_flat("data/laddata.json", blueIcon);
-
-// var baseMaps = {
-//   "Streets": streets
-// };
 
