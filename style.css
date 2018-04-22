@@ -49,6 +49,7 @@ html {
 
 .form-section {
     padding-top: 15px;
+    padding-left: 25px;
     background-color: #ecf0f1;
 }
 
@@ -58,3 +59,4 @@ html {
     display: inline;
 
 }
+
